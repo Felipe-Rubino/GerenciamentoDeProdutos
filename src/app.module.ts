@@ -2,6 +2,7 @@
   import { TypeOrmModule } from '@nestjs/typeorm';
   import { ProductModule } from './produtos/produto.module';
 import { StatusModule } from './app/status.module';
+import { LogModule } from './logs/log.module';
 
   @Module({
     imports: [
@@ -12,7 +13,8 @@ import { StatusModule } from './app/status.module';
         synchronize: true
       }),
       ProductModule,
-      StatusModule
+      StatusModule,
+      LogModule
     ],
     controllers: [],
     providers: [],

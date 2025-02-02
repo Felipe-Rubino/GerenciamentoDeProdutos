@@ -1,27 +1,27 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { isatty } from 'tty';
 
 export class ProductDTO {
 
   codProduto: number | null;
 
-  @IsString({ message: 'A descrição do produto não pode ser vazia' })
-  descricaoProduto: string;
+  @IsOptional()
+  descricaoProduto?: string;
 
-  @IsString({ message: 'A descrição da marca não pode ser vazia' })
-  marca: string;
+  @IsOptional()
+  marca?: string;
 
-  @IsNumber({}, { message: 'O valor deve ser um número' })
-  valor: number;
+  @IsOptional()
+  valor?: number;
 
   @IsBoolean()
   isAtivo: boolean;
 
   constructor( 
-    descricaoProduto: string,
-    marca: string,
-    valor: number,
     codProduto: number | null,
+    descricaoProduto?: string,
+    marca?: string,
+    valor?: number,
     isAtivo: boolean = true
   ) {
     if(codProduto) {

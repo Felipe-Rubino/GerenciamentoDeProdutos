@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProdutoEntity } from './produto.entity';
 import { Repository } from 'typeorm';
 import { ProductDTO } from './dto/ProductDTO.dto';
+import { LogService } from 'src/logs/log.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(ProdutoEntity)
     private readonly productRepository: Repository<ProdutoEntity>,
+    private readonly logService: LogService
   ) {}
 
   async createProduct(productData: ProductDTO) {
@@ -21,7 +23,7 @@ export class ProductService {
   async findAll() {
     const products = await this.productRepository.find();
     const productsList = products.map((product) => 
-        new ProductDTO(product.descricaoProduto, product.marca, product.valor, product.codProduto, product.isAtivo));
+        new ProductDTO( product.codProduto, product.descricaoProduto, product.marca, product.valor, product.isAtivo));
 
     return productsList;
   }
@@ -29,6 +31,7 @@ export class ProductService {
   async updateProduct(id: number, productData: ProductDTO) {
     const productEntity = new ProdutoEntity();
     productEntity.dtoToEntity(productData);
+    await this.logService.logProductUpdate(id, productData.descricaoProduto);
     await this.productRepository.update(id, productEntity);
   }
 
