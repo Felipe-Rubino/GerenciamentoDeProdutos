@@ -2,7 +2,7 @@
   import { TypeOrmModule } from '@nestjs/typeorm';
   import { ProductModule } from './produtos/produto.module';
 import { StatusModule } from './app/status.module';
-import { LogModule } from './logs/log.module';
+import { LogModule } from './log/log.module';
 
   @Module({
     imports: [

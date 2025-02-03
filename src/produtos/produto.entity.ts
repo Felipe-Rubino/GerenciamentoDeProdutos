@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ProductDTO } from "./dto/ProductDTO.dto";
-import { LogEntity } from "src/logs/log.entity";
+import { LogEntity } from "src/log/log.entity";
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
