@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ProductDTO } from "./dto/ProductDTO.dto";
 import { LogEntity } from "src/log/log.entity";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
@@ -16,7 +17,7 @@ export class ProdutoEntity {
 
     @Column({ name: 'descricao_produto', nullable: true })
     descricaoProduto: string;
-
+    
     @Column({ name: 'ativo' })
     isAtivo: boolean;
 

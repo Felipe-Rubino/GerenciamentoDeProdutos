@@ -40,29 +40,42 @@ export class ProductService {
 
   async updateProduct(id: number, productData: ProductDTO) {
     try {
-      const existingProduct = await this.productRepository.findOneBy({ codProduto: id });
-      if (!existingProduct) {
-        throw new Error('Product not found');
-      }
-      const productEntity = new ProdutoEntity();
-      productEntity.dtoToEntity(productData);
-      const changes: string[] = [];
-      for (const key in productData) {
-        if (existingProduct[key] !== productEntity[key]) {
-          changes.push(`${key}: ${existingProduct[key]} -> ${productEntity[key]}`);
+        // Busca o produto existente no banco de dados
+        const existingProduct = await this.productRepository.findOneBy({ codProduto: id });
+        if (!existingProduct) {
+            throw new Error('Product not found');
         }
-      }
-      if (changes.length > 0) {
-        await this.productRepository.update(id, productEntity);
+
+        // Cria um objeto para armazenar apenas os campos que serão atualizados
+        const updates: Partial<ProdutoEntity> = {};
+
+        // Itera sobre as chaves do productData para verificar quais campos foram fornecidos
+        for (const key in productData) {
+            if (productData[key] !== undefined && productData[key] !== null) {
+                updates[key] = productData[key];
+            }
+        }
+
+        // Se não houver campos para atualizar, registra no log e retorna
+        if (Object.keys(updates).length === 0) {
+            await this.logService.log(id, `No changes detected for product ${id}`);
+            return;
+        }
+
+        // Atualiza apenas os campos fornecidos
+        await this.productRepository.update(id, updates);
+
+        // Registra as mudanças no log
+        const changes: string[] = [];
+        for (const key in updates) {
+            changes.push(`${key}: ${existingProduct[key]} -> ${updates[key]}`);
+        }
         const changeDescription = `Product ${id} has been updated. Changes: ${changes.join(', ')}`;
         await this.logService.log(id, changeDescription);
-      } else {
-        await this.logService.log(id, `No changes detected for product ${id}`);
-      }
     } catch (error) {
-      throw new Error('Error updating Product');
+        throw new Error('Error updating Product');
     }
-  }
+}
 
   async deleteProduct(id: number) {
     const existingProduct = await this.productRepository.findOneBy({ codProduto: id });

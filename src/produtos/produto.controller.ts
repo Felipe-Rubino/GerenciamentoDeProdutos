@@ -61,6 +61,7 @@ export class ProdutoController {
   }
 
   @Delete('/:id')
+  @ApiOperation({ summary: 'Delete a product' })
   async deleteProduct(@Param('id') id: number,@Res() res: Response) {
     try {
         const updatedProduct = await this.productService.deleteProduct(id);

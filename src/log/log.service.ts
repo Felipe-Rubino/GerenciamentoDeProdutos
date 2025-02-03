@@ -23,21 +23,27 @@ export class LogService {
   async findAll(entityName?: string, page: number = 1, limit: number = 50) {
     const skip = (page - 1) * limit;
 
+    let logs: LogEntity[];
+
     if (!entityName) {
-      const logs = await this.logRepository.find({
-        skip,
-        take: limit,
-      });
-      return logs;
+        logs = await this.logRepository.find({
+            skip,
+            take: limit,
+        });
+    } else {
+        logs = await this.logRepository.find({
+            where: { entityName: Like(`%${entityName}%`) },
+            skip,
+            take: limit,
+        });
     }
 
-    const logs = await this.logRepository.find({
-      where: { entityName: Like(`%${entityName}%`) },
-      skip,
-      take: limit,
-    });
+    const formattedLogs = logs.map(log => ({
+        ...log,
+        dtInc: format(new Date(log.dtInc), 'yyyy-MM-dd HH:mm:ss') 
+    }));
 
-    return logs;
+    return formattedLogs;
   }
 
   setEntityName(entityName: string) {
