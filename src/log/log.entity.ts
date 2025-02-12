@@ -8,7 +8,7 @@ export class LogEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @CreateDateColumn({ name: 'dtinc' })
+    @CreateDateColumn({ name: 'dtInc' })
     dtInc: Date;
 
     @Column({ name: 'entity_id', nullable: false })
